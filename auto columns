@@ -1,0 +1,45 @@
+<table id="table" data-show-export="true" class="table table-responsive table-striped table-bordered table-hover table-condensed text-nowrap"></table>
+
+$("#table").bootstrapTable({
+                    ajax: function (request) {
+                        $.ajax({
+                            type: "GET",
+                            url: "http://algnts30.algex.asmpt.com/ProcurementKanbanBoardService/ProcurementKanbanBoardService.asmx/Get_OpenPOIntegrated",
+                            //contentType: "application/json;charset=utf-8",
+                            dataType: "json",
+                            json: 'callback',
+                            success: function (json) {
+                                var columnsArray = [];                            
+                                //columnsArray.push({ field: "state", checkbox: true });
+                                for (var i = 0; i < (Object.keys(json[0])).length; i++) {
+                                    var property = (Object.keys(json[0]))[i];
+                                    columnsArray.push({
+                                        "title": property,
+                                        "field": property,
+                                        switchable: true,
+                                        sortable: true
+                                    });
+                                }
+                                console.log(columnsArray['Cre_Date']);
+                                $('#table').bootstrapTable('destroy').bootstrapTable({
+                                    data: json,
+                                    toolbar: '#toolbar',
+                                    singleSelect: true,
+                                    clickToSelect: true,
+                                    pageSize: 10,
+                                    pageNumber: 1,
+                                    pageList: "[10, 25, 50, 100, All]",
+                                    showToggle: true,
+                                    showRefresh: true,
+                                    showColumns: true,
+                                    search: true,
+                                    pagination: true,
+                                    columns: columnsArray,
+                                });
+                            },
+                            error: function () {
+                                alert("错误");
+                            }
+                        });
+                    }
+                });
